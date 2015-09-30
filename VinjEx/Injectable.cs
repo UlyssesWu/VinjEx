@@ -37,7 +37,7 @@ namespace VinjEx
             props["port"] = 0;
             props["portName"] = props["name"];
             BinaryServerFormatterSinkProvider serverProvider = new BinaryServerFormatterSinkProvider(props,null);
-            BinaryClientFormatterSinkProvider clientProvider = new BinaryClientFormatterSinkProvider();
+            //BinaryClientFormatterSinkProvider clientProvider = new BinaryClientFormatterSinkProvider();
             serverProvider.TypeFilterLevel = TypeFilterLevel.Full;
 
             _channel = new IpcServerChannel(props, serverProvider);
@@ -69,7 +69,6 @@ namespace VinjEx
         {
             OnLoad();
             RemoteHooking.WakeUpProcess();
-            //_interface.OnExit += Exit;
             while (!_interface.ShouldExit)
             {
                 //Thread.Sleep(10); //Would it be more efficient?

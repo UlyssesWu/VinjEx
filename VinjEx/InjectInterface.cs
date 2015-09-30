@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using System.Windows.Forms;
 
 namespace VinjEx
 {
     public delegate void CommandHandler(object command);
     public delegate void ExitHandler();
 
-    public class InjectInterface : MarshalByRefObject
+    internal class InjectInterface : MarshalByRefObject
     {
         public event CommandHandler OnCommand;
         public event CommandHandler OnResponse;

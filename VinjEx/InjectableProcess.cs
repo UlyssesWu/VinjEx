@@ -76,11 +76,7 @@ namespace VinjEx
                 OnHostCommand(command);
                 return true;
             }
-            else
-            {
-                return false;
-            }
-
+            return false;
         }
 
         /// <summary>
@@ -106,7 +102,6 @@ namespace VinjEx
                     _interface.ShouldExit = true;
                 }
                 return 0;
-                //throw;
             }
         }
 
