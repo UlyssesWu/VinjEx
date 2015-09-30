@@ -100,6 +100,11 @@ namespace VinjEx
             }
             catch (Exception)
             {
+                //FIXED: The Part Where He Kills You
+                if (_interface!=null)
+                {
+                    _interface.ShouldExit = true;
+                }
                 return 0;
                 //throw;
             }
