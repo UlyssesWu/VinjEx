@@ -52,13 +52,18 @@ namespace InjectTest
                 Console.ReadLine();
                 return;
             }
-            //Get ready to inject
+            //pass through target PID
             InjectableProcess ip = new InjectableProcess(pid);
+
+            //Good morning. You have been in suspension for nine nine nine... nine nine ni- 
+            ip.SleepInterval = 9999999; //Don't worry, since when we call Eject, the dll thread will be woke up immediately.
+
             //Register a method to handle DLL's response
             //Always register methods BEFORE DLL injection
             ip.OnClientResponse += YouSavedScience;
             //If a method would not associate with any local vars (like below), it is safe and can be registered even in static methods
             ip.OnClientExit += () => { MessageBox.Show("[Host]Got client offline message.\nNow I only Want You Gone-"); };
+            
             //Inject method would return 0 If inject failed (same as VInjDn do)
             if (ip.Inject(@"TestDLL.dll") == 0)
             {
@@ -66,13 +71,13 @@ namespace InjectTest
                 Console.ReadLine();
                 return;
             }
-            //Send command to DLL
+            //Commands To Test By
             ip.Command("This was a triumph.");
             Console.ReadLine();
-            //Commands to test by
+            //Reconstructing More Science
             ip.Command("VinjEx by Ulysses - wdwxy12345@gmail.com");
             Console.ReadLine();
-            //Use this to release DLL 
+            //Use this to release DLL
             ip.Eject();
             Console.WriteLine("Total Response:" + TestChamber);
             Console.ReadLine();

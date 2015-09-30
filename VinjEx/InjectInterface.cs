@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace VinjEx
 {
@@ -13,9 +10,11 @@ namespace VinjEx
         public event CommandHandler OnCommand;
         public event CommandHandler OnResponse;
         public event ExitHandler OnExit;
+        public event ExitHandler OnClientExit;
         public object Data = null;
         public EventWrapper Wrapper;
         public bool ShouldExit = false;
+        public int SleepInterval = InjectableProcess.SLEEP_TIME;
         public bool Connected { get; private set; } = false;
 
         public InjectInterface()
@@ -51,6 +50,7 @@ namespace VinjEx
         public void Destory()
         {
             ShouldExit = true;
+            OnClientExit?.Invoke();
         }
     }
 }
