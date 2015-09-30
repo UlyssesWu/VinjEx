@@ -5,9 +5,32 @@ using System.Diagnostics;
 
 namespace InjectTest
 {
-    class Program
+    /// <summary>
+    /// NOTE: if the client would call a method in host which would operate host's local vars, you have to add "MarshalByRefObject" for host class like below.
+    /// <para>And only non-static vars can be operate. Statics are always native.</para>
+    /// </summary>
+    class Program : MarshalByRefObject
     {
-        private static void Main(string[] args)
+        /// <summary>
+        /// This var is changed indirectly by client
+        /// </summary>
+        public int TestChamber = 0;
+
+        /// <summary>
+        /// This method is called by client
+        /// </summary>
+        /// <param name="subjectNameHere"></param>
+        public void YouSavedScience(object subjectNameHere)
+        {
+            MessageBox.Show("[Host]Got a message from client:\n" + subjectNameHere.ToString(),
+                   Process.GetCurrentProcess().ProcessName);
+            TestChamber++;
+        }
+
+        /// <summary>
+        /// You can't register a method like <see cref="YouSavedScience"/> in static methods.
+        /// </summary>
+        public void WakingUpToScience()
         {
             int pid = 0;
             Console.WriteLine("Input process name:");
@@ -17,7 +40,8 @@ namespace InjectTest
             bool getted = false;
             foreach (var process in ps)
             {
-                if (string.IsNullOrEmpty(process.MainWindowTitle)) continue;
+                if (string.IsNullOrEmpty(process.MainWindowTitle))
+                    continue;
                 pid = process.Id;
                 getted = true;
                 break;
@@ -32,7 +56,8 @@ namespace InjectTest
             InjectableProcess ip = new InjectableProcess(pid);
             //Register a method to handle DLL's response
             //Always register methods BEFORE DLL injection
-            ip.OnClientResponse += command => MessageBox.Show("[Host]Got a message from client:\n" + command.ToString(),Process.GetCurrentProcess().ProcessName);
+            ip.OnClientResponse += YouSavedScience;
+            //If a method would not associate with any local vars (like below), it is safe and can be registered even in static methods
             ip.OnClientExit += () => { MessageBox.Show("[Host]Got client offline message.\nNow I only Want You Gone-"); };
             //Inject method would return 0 If inject failed (same as VInjDn do)
             if (ip.Inject(@"TestDLL.dll") == 0)
@@ -49,7 +74,14 @@ namespace InjectTest
             Console.ReadLine();
             //Use this to release DLL 
             ip.Eject();
+            Console.WriteLine("Total Response:" + TestChamber);
             Console.ReadLine();
+        }
+
+        private static void Main(string[] args)
+        {
+            Program p = new Program();
+            p.WakingUpToScience();
         }
     }
 

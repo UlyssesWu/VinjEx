@@ -7,6 +7,7 @@ namespace TestDLL
 {
     public class Main2 : VinjEx.Injectable
     {
+        public int CooperationPoints = 0;
         public Main2(RemoteHooking.IContext inContext, string channel) : base(inContext, channel)
         {
         }
@@ -18,13 +19,14 @@ namespace TestDLL
 
         public override void OnCommand(object command)
         {
+            CooperationPoints++;
             MessageBox.Show("[Client]Got a message from host:\n"+(string)command, Process.GetCurrentProcess().ProcessName);
             SendResponse("I'm making a note here: HUGE SUCCESS");
         }
 
         public override void OnUnload()
         {
-            MessageBox.Show("[Client]DLL Ejected\nAnd when you're dead I will be Still Alive...");
+            MessageBox.Show("[Client]DLL Ejected\nAnd when you're dead I will be Still Alive...\nTotal Command:"+CooperationPoints.ToString());
             base.OnUnload();
         }
 
