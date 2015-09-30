@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using EasyHook;
 
@@ -9,10 +10,10 @@ namespace TestDLL
         public Main2(RemoteHooking.IContext inContext, string channel) : base(inContext, channel)
         {
         }
-
+        
         public override void OnLoad()
         {
-            MessageBox.Show("DLL Injected\nOh, it's you!");
+            MessageBox.Show("[Client]DLL Injected\nOh, it's you!");
         }
 
         public override void OnCommand(object command)
@@ -23,7 +24,7 @@ namespace TestDLL
 
         public override void OnUnload()
         {
-            MessageBox.Show("DLL Ejected\nAnd when you're dead I will be still alive...");
+            MessageBox.Show("[Client]DLL Ejected\nAnd when you're dead I will be Still Alive...");
             base.OnUnload();
         }
 

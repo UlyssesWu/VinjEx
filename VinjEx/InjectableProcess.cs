@@ -10,12 +10,20 @@ namespace VinjEx
     /// </summary>
     public class InjectableProcess
     {
-        private int _pid = 0;
+        private readonly int _pid;
         private readonly string _channelName;
         private InjectInterface _interface;
         private static IpcChannel _channel;
+        /// <summary>
+        /// Register by host. Fired when client send response.
+        /// </summary>
         public event CommandHandler OnClientResponse;
-        public event CommandHandler OnServerCommand;
+        /// <summary>
+        /// Register by host. Fired after client unload.
+        /// </summary>
+        public event ExitHandler OnClientExit;
+        
+        internal event CommandHandler OnHostCommand;
         /// <summary>
         /// Injectable Process
         /// </summary>
@@ -25,7 +33,7 @@ namespace VinjEx
             _pid = pid;
             _interface = new InjectInterface();
             //MARK:An IpcChannel that shall be keept alive until the server is not needed anymore.
-            _channel = Util.IpcCreateServer<InjectInterface>(ref _channelName, WellKnownObjectMode.Singleton, _interface);//MARK:注意第三个参数
+            _channel = Util.IpcCreateServer(ref _channelName, WellKnownObjectMode.Singleton, _interface);//MARK:注意第三个参数
             //var _channel = RemoteHooking.IpcCreateServer<InjectInterface>(ref _channelName, WellKnownObjectMode.SingleCall);//MARK:注意第三个参数
         }
 
@@ -44,8 +52,11 @@ namespace VinjEx
         {
             try
             {
+                //Methods that will be called by host
                 _interface.Wrapper.OnResponse += OnClientResponse;
-                OnServerCommand += _interface.Wrapper.FireServerCommand;
+                _interface.Wrapper.OnExit += OnClientExit;
+                //Methods that will be called by client
+                OnHostCommand += _interface.Wrapper.FireCommand;
             }
             catch (Exception ex)
             {
@@ -57,12 +68,12 @@ namespace VinjEx
         /// Send command to Injection DLL
         /// </summary>
         /// <param name="command"></param>
-        /// <returns>命令是否成功发送</returns>
+        /// <returns></returns>
         public bool Command(object command)
         {
-            if (OnServerCommand != null)
+            if (OnHostCommand != null)
             {
-                OnServerCommand(command);
+                OnHostCommand(command);
                 return true;
             }
             else
@@ -87,13 +98,16 @@ namespace VinjEx
                 RegisterEvents();
                 return _pid;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
-                throw;
+                //throw;
             }
         }
 
+        /// <summary>
+        /// Eject the DLL
+        /// </summary>
         public void Eject()
         {
             if (_interface != null)

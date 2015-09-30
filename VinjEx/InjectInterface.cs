@@ -17,6 +17,7 @@ namespace VinjEx
         public object Data = null;
         public EventWrapper Wrapper;
         public bool ShouldExit = false;
+        public bool Connected { get; private set; } = false;
 
         public InjectInterface()
         {
@@ -30,33 +31,27 @@ namespace VinjEx
 
         public bool SendCommand(object command)
         {
-            if (OnCommand != null)
-            {
-                OnCommand(command);
-                return true;
-            }
-            return false;
+            if (OnCommand == null) return false;
+            OnCommand(command);
+            return true;
         }
 
         public bool SendResponse(object response)
         {
-            if (OnResponse != null)
-            {
-                OnResponse(response);
-                return true;
-            }
-            return false;
+            if (OnResponse == null) return false;
+            OnResponse(response);
+            return true;
         }
 
         public void Ping()
         {
+            Connected = true;
             //MessageBox.Show("Ping from" + Process.GetCurrentProcess().MainWindowTitle);
         }
 
         public void Destory()
         {
             ShouldExit = true;
-            OnExit?.Invoke();
         }
     }
 }

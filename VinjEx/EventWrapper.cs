@@ -12,7 +12,7 @@ namespace VinjEx
         public event CommandHandler OnResponse;
         public event ExitHandler OnExit;
 
-        public void FireServerCommand(object command)
+        public void FireCommand(object command)
         {
             OnCommand?.Invoke(command);
         }

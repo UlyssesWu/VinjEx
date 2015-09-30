@@ -35,7 +35,7 @@ namespace VinjEx
             IDictionary props = new Hashtable();
             props["name"] = Util.GenerateName();
             props["port"] = 0;
-            props["portName"] = Guid.NewGuid().ToString();
+            props["portName"] = props["name"];
             BinaryServerFormatterSinkProvider serverProvider = new BinaryServerFormatterSinkProvider(props,null);
             BinaryClientFormatterSinkProvider clientProvider = new BinaryClientFormatterSinkProvider();
             serverProvider.TypeFilterLevel = TypeFilterLevel.Full;
@@ -61,6 +61,7 @@ namespace VinjEx
             _interface.Wrapper = new EventWrapper();
             _interface.Wrapper.OnCommand += OnCommand;
             _interface.OnResponse += _interface.Wrapper.FireResponse;
+            _interface.OnExit += _interface.Wrapper.FireExit;
             //_interface.TestString = "Hello Moto";
         }
 
@@ -74,6 +75,7 @@ namespace VinjEx
                 //Thread.Sleep(10); //Would it be more efficient?
             }
             OnUnload();
+            _interface.Wrapper.FireExit();
         }
 
         /// <summary>
