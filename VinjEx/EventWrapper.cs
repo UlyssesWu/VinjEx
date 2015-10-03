@@ -2,6 +2,8 @@
 
 namespace VinjEx
 {
+    public delegate void CommandHandler(object command);
+
     /// <summary>
     /// EventWrapper used for two-way communication.
     /// No need to use it manually.
@@ -10,7 +12,7 @@ namespace VinjEx
     {
         public event CommandHandler OnCommand;
         public event CommandHandler OnResponse;
-        public event ExitHandler OnExit;
+        public event EventHandler OnExit;
 
         public void FireCommand(object command)
         {
@@ -22,9 +24,9 @@ namespace VinjEx
             OnResponse?.Invoke(response);
         }
 
-        public void FireExit()
+        public void FireExit(object sender,EventArgs e)
         {
-            OnExit?.Invoke();
+            OnExit?.Invoke(sender,e);
         }
 
         public override object InitializeLifetimeService()

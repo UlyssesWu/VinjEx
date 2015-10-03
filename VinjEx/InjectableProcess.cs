@@ -24,7 +24,7 @@ namespace VinjEx
         /// <summary>
         /// Register by host. Fired after client unload.
         /// </summary>
-        public event ExitHandler OnClientExit;
+        public event EventHandler OnClientExit;
 
         /// <summary>
         /// How much time(second) dll thread will sleep once when idle.
@@ -97,8 +97,16 @@ namespace VinjEx
         {
             if (OnHostCommand != null)
             {
-                OnHostCommand(command);
-                return true;
+                try
+                {
+                    OnHostCommand(command);
+                    return true;
+                }
+                catch (RemotingException)
+                {
+                    return false;
+                }
+
             }
             return false;
         }

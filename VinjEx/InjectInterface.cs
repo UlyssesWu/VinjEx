@@ -2,15 +2,13 @@
 
 namespace VinjEx
 {
-    public delegate void CommandHandler(object command);
-    public delegate void ExitHandler();
 
     internal class InjectInterface : MarshalByRefObject
     {
         public event CommandHandler OnCommand;
         public event CommandHandler OnResponse;
-        public event ExitHandler OnExit;
-        public event ExitHandler OnClientExit;
+        public event EventHandler OnExit;
+        public event EventHandler OnClientExit;
         public object Data = null;
         public EventWrapper Wrapper;
         public bool ShouldExit = false;
@@ -50,7 +48,7 @@ namespace VinjEx
         public void Destory()
         {
             ShouldExit = true;
-            OnClientExit?.Invoke();
+            OnClientExit?.Invoke(null,null);
         }
     }
 }

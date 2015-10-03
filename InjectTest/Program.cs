@@ -62,7 +62,7 @@ namespace InjectTest
             //Always register methods BEFORE DLL injection
             ip.OnClientResponse += YouSavedScience;
             //If a method would not associate with any local vars (like below), it is safe and can be registered even in static methods
-            ip.OnClientExit += () => { MessageBox.Show("[Host]Got client offline message.\nNow I only Want You Gone-"); };
+            ip.OnClientExit += (s,e) => { MessageBox.Show("[Host]Got client offline message.\nNow I only Want You Gone-"); };
             
             //Inject method would return 0 If inject failed (same as VInjDn do)
             if (ip.Inject(@"TestDLL.dll") == 0)
@@ -75,7 +75,7 @@ namespace InjectTest
             ip.Command("This was a triumph.");
             Console.ReadLine();
             //Reconstructing More Science
-            ip.Command("VinjEx by Ulysses - wdwxy12345@gmail.com");
+            ip.Command(1); //Tell me something about your process!
             Console.ReadLine();
             //Use this to release DLL
             ip.Eject();

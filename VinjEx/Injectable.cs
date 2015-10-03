@@ -86,14 +86,14 @@ namespace VinjEx
                 }
             }
             OnUnload();
-            _interface.Wrapper.FireExit();
+            _interface.Wrapper.FireExit(null,null);
 
         }
 
         /// <summary>
-        ///  Stop the Inject DLL. Will call OnUnload
+        ///  Stop the Inject DLL. Will call OnUnload after Exit
         /// </summary>
-        public void Exit()
+        public void Exit(object sender,EventArgs e)
         {
             _shouldExit = true;
             _thread?.Interrupt();
@@ -125,7 +125,8 @@ namespace VinjEx
         }
 
         /// <summary>
-        /// Called when the inject dll is going to exit.
+        /// Called when the inject dll is going to exit. 
+        /// Will be called after Exit. Be careful if you call Exit manually.
         /// </summary>
         public virtual void OnUnload()
         {
