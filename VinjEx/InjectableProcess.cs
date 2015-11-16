@@ -10,6 +10,9 @@ namespace VinjEx
     /// </summary>
     public class InjectableProcess
     {
+        /// <summary>
+        /// default thread sleep time
+        /// </summary>
         public const int SLEEP_TIME = 1000;
 
         private readonly int _pid;
@@ -27,12 +30,13 @@ namespace VinjEx
         public event EventHandler OnClientExit;
 
         /// <summary>
-        /// How much time(second) dll thread will sleep once when idle.
+        /// How much time(ms) dll thread will sleep once when idle.
         /// Will pass to dll thread when call <see cref="Inject"/>. Would be useless after that.
         /// </summary>
         public int SleepInterval
         {
-            get {
+            get
+            {
                 return _interface?.SleepInterval ?? SLEEP_TIME;
             }
             set
@@ -43,6 +47,8 @@ namespace VinjEx
                 }
             }
         }
+
+        public bool IsBackgroundThread = true;
 
         internal event CommandHandler OnHostCommand;
 
@@ -120,6 +126,9 @@ namespace VinjEx
         {
             try
             {
+                _interface.SleepInterval = SleepInterval;
+                _interface.IsBackgroundThread = IsBackgroundThread;
+
                 RemoteHooking.Inject(_pid, assemblyFile, string.IsNullOrEmpty(assemblyFile64) ? assemblyFile : assemblyFile64, _channelName);
 
                 RegisterEvents();
@@ -128,10 +137,7 @@ namespace VinjEx
             catch (Exception)
             {
                 //FIXED: The Part Where He Kills You
-                if (_interface != null)
-                {
-                    _interface.ShouldExit = true;
-                }
+                Eject();
                 return 0;
             }
         }

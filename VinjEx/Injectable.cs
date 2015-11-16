@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Serialization.Formatters;
@@ -15,11 +17,13 @@ namespace VinjEx
     /// </summary>
     public abstract class Injectable : MarshalByRefObject, IEntryPoint
     {
-        private readonly InjectInterface _interface;
         public readonly string ChannelName;
+        private readonly InjectInterface _interface;
         private bool _shouldExit = false;
+        private bool _unloaded = false;
         private static IpcServerChannel _channel;
         private Thread _thread;
+        private int _sleepInterval = InjectableProcess.SLEEP_TIME;
 
         public override object InitializeLifetimeService()
         {
@@ -61,6 +65,7 @@ namespace VinjEx
             _interface = IpcConnectClient(ChannelName);
             _interface.Ping();
 
+            _sleepInterval = _interface.SleepInterval;
             _interface.Wrapper = new EventWrapper();
             _interface.Wrapper.OnCommand += OnCommand;
             _interface.OnResponse += _interface.Wrapper.FireResponse;
@@ -71,23 +76,38 @@ namespace VinjEx
         public void Run(object inContext, String inChannelName)
         {
             OnLoad();
-            RemoteHooking.WakeUpProcess();
             _thread = Thread.CurrentThread;
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
+            {
+                if (!_unloaded)
+                {
+                    OnUnload();
+                    _interface.Wrapper.FireExit(null, null);
+                    _unloaded = true;
+                }
+            };
+            _thread.IsBackground = _interface.IsBackgroundThread;
             _interface.OnClientExit += Exit; //Only at this time can we make sure the dll thread is interruptable
-            while (!_interface.ShouldExit)
+            RemoteHooking.WakeUpProcess();
+            while (!_shouldExit)
             {
                 try
                 {
-                    Thread.Sleep((_interface?.SleepInterval)?? InjectableProcess.SLEEP_TIME); //Would it be more efficient?
+                    Thread.Sleep(_sleepInterval); //Would it be more efficient?
                 }
                 catch (ThreadInterruptedException)
                 {
                     //帅醒！
                 }
+                catch(RemotingException)
+                { }
             }
-            OnUnload();
-            _interface.Wrapper.FireExit(null,null);
-
+            if (!_unloaded)
+            {
+                OnUnload();
+                _interface.Wrapper.FireExit(null, null);
+                _unloaded = true;
+            }
         }
 
         /// <summary>
@@ -121,7 +141,15 @@ namespace VinjEx
         /// <param name="command"></param>
         public void SendResponse(object command)
         {
-            _interface.SendResponse(command);
+            try
+            {
+                _interface.SendResponse(command);
+            }
+            catch (RemotingException)
+            {
+                //throw;
+            }
+            
         }
 
         /// <summary>

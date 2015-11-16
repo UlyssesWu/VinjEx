@@ -3,12 +3,21 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 using EasyHook;
+using Timer = System.Threading.Timer;
 
 namespace TestDLL
 {
     public class Main2 : VinjEx.Injectable
     {
         public int CooperationPoints = 0;
+        //To test if dll can run after injector exited
+        //private Timer _timer = new Timer(Tick,null,3000,10000);
+
+        //private static void Tick(object state)
+        //{
+        //    MessageBox.Show("Tick");
+        //}
+
         public Main2(RemoteHooking.IContext inContext, string channel) : base(inContext, channel)
         {
         }

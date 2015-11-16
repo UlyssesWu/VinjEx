@@ -78,7 +78,7 @@ namespace InjectTest
             ip.Command(1); //Tell me something about your process!
             Console.ReadLine();
             //Use this to release DLL
-            ip.Eject();
+            //ip.Eject();
             Console.WriteLine("Total Response:" + TestChamber);
             Console.ReadLine();
         }
