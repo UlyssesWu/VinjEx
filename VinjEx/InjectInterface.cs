@@ -48,7 +48,15 @@ namespace VinjEx
         public void Destory()
         {
             ShouldExit = true;
-            OnClientExit?.Invoke(null,null);
+            try
+            {
+                OnClientExit?.Invoke(null, null); //May not execute in some force close condition?
+            }
+            catch (Exception)
+            {
+                //throw;
+            }
+
         }
     }
 }

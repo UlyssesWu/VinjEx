@@ -58,7 +58,6 @@ namespace VinjEx
             SleepInterval = sleepInterval;
             //MARK:An IpcChannel that shall be keept alive until the server is not needed anymore.
             _channel = Util.IpcCreateServer(ref _channelName, WellKnownObjectMode.Singleton, _interface);//MARK:注意第三个参数
-            //var _channel = RemoteHooking.IpcCreateServer<InjectInterface>(ref _channelName, WellKnownObjectMode.SingleCall);//MARK:注意第三个参数
         }
 
         /// <summary>

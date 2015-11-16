@@ -22,6 +22,7 @@ namespace TestDLL
         {
             CooperationPoints++;
             Process p = Process.GetCurrentProcess();
+
             if (command is string)
             {
                 MessageBox.Show("[Client]Got a message from host:\n" + (string)command,p.ProcessName);
@@ -30,11 +31,18 @@ namespace TestDLL
             else if(command is int)
             {
                 StringBuilder reconstructor = new StringBuilder();
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    reconstructor.AppendLine(assembly.FullName);
+                }
+                MessageBox.Show("[Client]I'm a spy!\n", p.ProcessName);
+                MessageBox.Show(reconstructor.ToString(), AppDomain.CurrentDomain.FriendlyName);
+
+                reconstructor.Clear();
                 reconstructor.AppendLine("FileName:\t" + p.MainModule.FileName);
                 reconstructor.AppendLine("Version:\t\n" + p.MainModule.FileVersionInfo);
                 reconstructor.AppendLine("ID:\t" + p.Id);
                 reconstructor.AppendLine("RAM:\t" + p.PagedSystemMemorySize64);
-                MessageBox.Show("[Client]I'm a spy!\n", p.ProcessName);
                 SendResponse(reconstructor.ToString());
             }
         }
