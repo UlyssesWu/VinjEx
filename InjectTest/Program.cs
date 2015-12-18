@@ -40,8 +40,8 @@ namespace InjectTest
             bool getted = false;
             foreach (var process in ps)
             {
-                if (string.IsNullOrEmpty(process.MainWindowTitle))
-                    continue;
+                //if (string.IsNullOrEmpty(process.MainWindowTitle))
+                //    continue;
                 pid = process.Id;
                 getted = true;
                 break;
@@ -65,7 +65,7 @@ namespace InjectTest
             ip.OnClientExit += (s,e) => { MessageBox.Show("[Host]Got client offline message.\nNow I only Want You Gone-"); };
             
             //Inject method would return 0 If inject failed (same as VInjDn do)
-            if (ip.Inject(@"TestDLL.dll") == 0)
+            if (ip.Inject(@"TestDLL.dll",@"TestDLL.dll") == 0)
             {
                 Console.WriteLine("Failed to inject!");
                 Console.ReadLine();

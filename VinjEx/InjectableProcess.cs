@@ -128,8 +128,11 @@ namespace VinjEx
             {
                 _interface.SleepInterval = SleepInterval;
                 _interface.IsBackgroundThread = IsBackgroundThread;
-
-                RemoteHooking.Inject(_pid, assemblyFile, string.IsNullOrEmpty(assemblyFile64) ? assemblyFile : assemblyFile64, _channelName);
+                if (RemoteHooking.IsX64Process(_pid))
+                {
+                    //Console.WriteLine("64bit program!");
+                }
+                RemoteHooking.Inject(_pid, assemblyFile, assemblyFile64, _channelName);
 
                 RegisterEvents();
                 return _pid;
