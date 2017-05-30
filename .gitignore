@@ -236,3 +236,9 @@ Metro.Nightcorer/Controls/PlayListControl - 副本.xaml
 Metro.Nightcorer/Controls/PlayListControl.xaml - 副本.cs
 *.psd
 /NC.psd
+/VinjEx/EasyHook64Svc.exe
+/VinjEx/EasyLoad32.dll
+/VinjEx/EasyLoad64.dll
+/VinjEx/EasyHook32.dll
+/VinjEx/EasyHook32Svc.exe
+/VinjEx/EasyHook64.dll
