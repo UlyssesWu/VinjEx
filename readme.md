@@ -1,1 +1,22 @@
-# VinjExA *simple* lib for DLL Injection, using [Easyhook](https://easyhook.github.io/).*Too simple, sometimes naive.  -Elder*### VinjEx is inspired by `VInj` & `VInjDn`.(Sorry but I can not find the author. Anyway, thank him/her! )I used to use VInjDn in my projects, but VInjDn is old and sometimes unstable.When using Easyhook, I find it is inconvenient for two-way communication.So I made `VinjEx`. It has similar syntax as VInjDn, easy to use, and more stable.#### Glad to be recommended by git@osc. You can read my essay about this lib [Here](http://114.215.126.213/post.aspx?id=cf372da7-5516-4380-8ef7-8c07ebf0f572). ### LICENSELGPL (because Easyhook uses)---by Ulysses , wdwxy12345@gmail.com
+# VinjEx
+
+A *simple* lib for DLL Injection, using [Easyhook](https://easyhook.github.io/).
+
+### VinjEx is inspired by `VInj` & `VInjDn`.
+
+(Sorry but I can not find the author. Anyway, thank him/her! )
+
+I used to use VInjDn in my projects, but VInjDn is old and sometimes unstable.
+
+When using Easyhook, I find it is inconvenient for two-way communication.
+
+So I made `VinjEx`. It has similar syntax as VInjDn, easy to use, and more stable.
+
+### LICENSE
+
+MIT
+
+
+---
+
+by Ulysses , wdwxy12345@gmail.com
