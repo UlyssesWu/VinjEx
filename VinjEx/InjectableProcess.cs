@@ -21,7 +21,7 @@ namespace VinjEx
         //Although we never use it, it should be kept until you finish this dll injection.
         private static IpcChannel _channel;
         /// <summary>
-        /// Register by host. Fired when client send response.
+        /// Register by host. Fired when client send response. <b>MUST be public non-static method!!</b>
         /// </summary>
         public event CommandHandler OnClientResponse;
         /// <summary>
